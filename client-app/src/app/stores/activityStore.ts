@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
-import {v4 as uuid} from 'uuid';
+
 
 export default class ActivitStore{
     activityRegistry = new Map<string, Activity>();
@@ -39,8 +39,7 @@ export default class ActivitStore{
         try{
             const activities = await agent.Activities.list();
             activities.forEach(activity => {
-                activity.date = activity.date.split('T')[0];
-                this.activityRegistry.set(activity.id, activity);
+                this.setActivity(activity);
               });
         }catch(error){
             console.log(error);
@@ -49,9 +48,37 @@ export default class ActivitStore{
         }
     }
 
+    loadActivity = async (id: string) => {
+        let activity = this.getActivity(id);
+        if(activity){
+            this.setSelectedActivity(activity);
+            return activity;
+        }
+       
+        this.setLoadingInitial(true);
+        try{
+            activity = await agent.Activities.details(id);
+            this.setActivity(activity);
+            this.setSelectedActivity(activity);
+            return activity;
+        }catch(error){
+            console.log(error);
+        }finally{
+            this.setLoadingInitial(false);
+        }
+    }
+
+    private getActivity = (id: string) => {
+        return this.activityRegistry.get(id);
+    }
+
+    private setActivity = (activity: Activity) => {
+        activity.date = activity.date.split('T')[0];
+        this.activityRegistry.set(activity.id, activity);
+    }
+
     createActivity = async (activity: Activity) => {
         this.setLoading(true);
-        activity.id = uuid();
         try{
             await agent.Activities.create(activity);
             runInAction(()=>{
@@ -88,35 +115,11 @@ export default class ActivitStore{
             await agent.Activities.delete(id);
             runInAction(()=>{
                 this.activityRegistry.delete(id);
-                if(this.selectedActivity?.id === id) 
-                    this.cancelSelectedActivity();
             })
         }catch(error){
             console.log(error);
         }finally{
             this.setLoading(false);
         }
-    }
-
-    selectActivity = (id: string) => {
-        this.setSelectedActivity(this.activityRegistry.get(id));
-    }
-
-    cancelSelectedActivity = () => {
-        this.setSelectedActivity(undefined);
-    }
-
-    openForm = (id?: string) => {
-        if(id){
-            this.selectActivity(id);
-        }else{
-            this.cancelSelectedActivity();
-        }
-
-        this.setEditMode(true);
-    }
-
-    closeForm = () => {
-        this.setEditMode(false);
     }
 }

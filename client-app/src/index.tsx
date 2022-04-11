@@ -4,12 +4,15 @@ import 'semantic-ui-css/semantic.min.css';
 import './app/layout/styles.css';
 import App from './app/layout/App';
 import { store, StoreContext } from './app/stores/store';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const container = document.getElementById('root');
 render(<React.StrictMode>
         <StoreContext.Provider value={store}>
-          <App/>
+          <BrowserRouter>
+            <App/>
+          </BrowserRouter>
         </StoreContext.Provider>
       </React.StrictMode>,
       container);
