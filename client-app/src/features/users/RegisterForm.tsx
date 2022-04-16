@@ -15,7 +15,7 @@ export default observer(function RegisterForm() {
     const validation = Yup.object({
         displayName: Yup.string().required(),
         username: Yup.string().required(),
-        email: Yup.string().required().email(),
+        email: Yup.string().required().email(), 
         password: Yup.string().required(),
     });
 
