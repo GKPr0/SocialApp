@@ -15,9 +15,14 @@ public class MappingProfiles : Profile
             .ForMember(d => d.HostUsername, options => options.MapFrom(source => source.Attendees
                 .FirstOrDefault(x => x.IsHost).AppUser.UserName));
 
-        CreateMap<ActivityAttendee, Profiles.Profile>()
+        CreateMap<ActivityAttendee, AttendeeDTO>()
             .ForMember(d => d.DisplayName, options => options.MapFrom(source => source.AppUser.DisplayName))
             .ForMember(d => d.Username, options => options.MapFrom(source => source.AppUser.UserName))
-            .ForMember(d => d.Bio, options => options.MapFrom(source => source.AppUser.Bio));
+            .ForMember(d => d.Bio, options => options.MapFrom(source => source.AppUser.Bio))
+            .ForMember(d => d.Image, options => options.MapFrom(source => source.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url));
+
+        CreateMap<AppUser, Profiles.Profile>()
+            .ForMember(d => d.Image, options => options.MapFrom(source => source.Photos.FirstOrDefault(x => x.IsMain).Url));
+
     }   
 }

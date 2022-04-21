@@ -1,5 +1,3 @@
-using Application.Profiles;
-
 namespace Application.Activities;
 
 public class ActivityDTO
@@ -21,5 +19,5 @@ public class ActivityDTO
 
      public bool IsCancelled { get; set; }
 
-    public ICollection<Profile> Attendees { get; set; }
+    public ICollection<AttendeeDTO> Attendees { get; set; }
 }
