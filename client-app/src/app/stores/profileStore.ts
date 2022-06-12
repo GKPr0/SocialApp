@@ -6,7 +6,6 @@ import { store } from "./store";
 export default class ProfileStore {
     profile: Profile | null = null;
     loadingProfile: boolean = false;
-    uploadingProfile: boolean = false;
     uploadingPhoto: boolean = false;
     deletingPhoto: boolean = false;
     settingMainPhoto: boolean = false;
@@ -28,10 +27,6 @@ export default class ProfileStore {
 
     setLoadingProfile(loading: boolean) {
         this.loadingProfile = loading;
-    }
-
-    setUploadingProfile(uploading: boolean) {
-        this.uploadingProfile = uploading;
     }
 
     setUploadingPhoto(uploading: boolean) {
@@ -59,7 +54,6 @@ export default class ProfileStore {
     }
 
     editProfile = async (profile: Partial<Profile>) => {
-        this.setUploadingProfile(true);
         try {
             await agent.Profiles.edit(profile);
             runInAction(() => {
@@ -71,7 +65,6 @@ export default class ProfileStore {
         }catch (err) {
             console.error(err);
         }
-        this.setUploadingProfile(false);
     }
 
     uploadPhoto = async (file: Blob) => {

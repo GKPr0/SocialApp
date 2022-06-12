@@ -8,13 +8,12 @@ import MyTextInput from "../../app/common/form/MyTextInput";
 import MyTextArea from "../../app/common/form/MyTextArea";
 
 interface Props{
-    profile: Profile;
     setEditMode: (editMode: boolean) => void;
 }
 
-export default function ProfileEditForm({ profile, setEditMode }: Props) {
+export default function ProfileEditForm({ setEditMode }: Props) {
   
-    const {profileStore: {editProfile}} = useStore();
+    const {profileStore: {profile, editProfile}} = useStore();
 
     const validationSchema = Yup.object({
         displayName: Yup.string().required("Required"),
@@ -26,8 +25,8 @@ export default function ProfileEditForm({ profile, setEditMode }: Props) {
  
     return (
         <Formik
-            initialValues = {{displayName: profile.displayName, bio: profile.bio}}
-            onSubmit = {values => handleFormSubmit(values)}
+            initialValues = {{displayName: profile?.displayName, bio: profile?.bio}}
+            onSubmit = {handleFormSubmit}
             validationSchema = {validationSchema}
         >
             {({ isValid, isSubmitting, dirty }) => (

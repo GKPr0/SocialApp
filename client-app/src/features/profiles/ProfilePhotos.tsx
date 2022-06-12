@@ -2,15 +2,12 @@ import { observer } from "mobx-react-lite";
 import React, { SyntheticEvent, useState } from "react";
 import { Card, Header, Tab, Image, Grid, Button } from "semantic-ui-react";
 import PhotoUploadWidget from "../../app/common/imageUpload/PhotoUploadWidget";
-import { Photo, Profile } from "../../app/models/profile";
+import { Photo } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
 
-interface Props {
-    profile: Profile;
-}
 
-export default observer(function ProfilePhotos({ profile }: Props) {
-    const { profileStore: { isCurrentUser, uploadPhoto, uploadingPhoto,
+export default observer(function ProfilePhotos() {
+    const { profileStore: { profile, isCurrentUser, uploadPhoto, uploadingPhoto,
         settingMainPhoto, setMainPhoto, deletingPhoto, deletePhoto } } = useStore();
     const [addPhotoMode, setAddPhotoMode] = useState(false);
     const [target, setTarget] = useState("");
@@ -45,7 +42,7 @@ export default observer(function ProfilePhotos({ profile }: Props) {
                         <PhotoUploadWidget uploadPhoto={handlePhotoUpload} loading={uploadingPhoto} />
                     ) : (
                         <Card.Group itemsPerRow={5}>
-                            {profile.photos?.map(photo => (
+                            {profile?.photos?.map(photo => (
                                 <Card key={photo.id}>
                                     <Image src={photo.url} />
                                     {isCurrentUser && (
