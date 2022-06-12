@@ -1,7 +1,6 @@
 import { Formik, Form } from "formik";
 import React from "react"; 
 import { Button, } from "semantic-ui-react";
-import { Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
 import * as Yup from "yup";
 import MyTextInput from "../../app/common/form/MyTextInput";
