@@ -20,6 +20,16 @@ export default class UserStore {
         this.user = user;
     }
 
+    getUser = async () => {
+        try {
+            const user = await agent.Account.current();
+            this.setUser(user);
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     login = async (creds: UserFormValues) => {
         try {
             const user = await agent.Account.login(creds);
@@ -57,14 +67,9 @@ export default class UserStore {
         }
     }
 
-    getUser = async () => {
-        try {
-            const user = await agent.Account.current();
-            this.setUser(user);
-            return user;
-        } catch (error) {
-            throw error;
+    setDisplayName = (displayName: string) => {
+        if (this.user) {
+            this.user.displayName = displayName;
         }
     }
-
 }
